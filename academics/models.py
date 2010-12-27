@@ -158,7 +158,7 @@ class Batch(models.Model): # Batch <- Class
       return self.course.department.abbr + '-' + self.section + '-' + (str)(self.year_of_graduation)
 
 class SubjectManager(models.Manager):
-   def get_by_natural_key(self, paper__code, batch__course__department__abbr, batch__course__year_of_graduation, batch__section):
+   def get_by_natural_key(self, paper__code, batch__course__department__abbr, batch__year_of_graduation, batch__section):
       return self.get(paper__code=paper__code, batch__course__department__abbr=batch__course__department__abbr, batch__year_of_graduation=batch__year_of_graduation, batch__section=batch__section )
 
 class Subject(models.Model):
