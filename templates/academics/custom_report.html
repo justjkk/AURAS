@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+{% block head %}
+   <link rel="stylesheet" href="/static/css/checktree.css">
+   <script language="javascript" type="text/javascript" src="/static/js/jquery.js"></script>
+   <script language="javascript" type="text/javascript" src="/static/js/jquery.flot.js"></script>
+   <script language="javascript" type="text/javascript" src="/static/js/jquery.checktree.0.3b1.pack.js"></script>
+   <script language="javascript" type="text/javascript" src="/static/js/jquery.flot.pie.js"></script>
+   <script type="text/javascript">
+      $(document).ready(function (){
+         $("ul.tree").checkTree();
+         {% if graphs %}
+         $.plot(
+            $("#graph_overall"),
+            [
+               {% for od in graphs.overall %}
+               {% autoescape off %}
+                  {{ od }},
+               {% endautoescape %}
+               {% endfor %}
+            ]
+            ,
+            {
+               series: {
+                  pie: {
+                     show: true
+                  }
+               }
+            }
+         );
+         $.plot(
+            $("#graph_gender"),
+            [
+               {% for gd in graphs.gender %}
+               {
+                  'label': '{{gd.y}} : {{gd.label}}',
+                  'data':[[{{gd.x}},{{gd.y}}],],
+                  'bars':{show:true, align:"center"},
+                  'color': '{{gd.color}}',
+               },
+               {% endfor %}
+            ],
+            {
+               xaxis: {
+                  min: 0,
+                  max: 6,
+                  ticks: [[1,'Male'],[3,'Female']],
+               },
+               yaxis: {
+                  min:0,
+               },
+               grid: {
+                  backgroundColor: { colors: ["#fff", "#ffe"] }
+               }
+            }
+         );
+         $.plot(
+            $("#graph_staying"),
+            [
+               {% for gd in graphs.staying %}
+               {
+                  'label': '{{gd.y}} : {{gd.label}}',
+                  'data':[[{{gd.x}},{{gd.y}}],],
+                  'bars':{show:true, align:"center"},
+                  'color': '{{gd.color}}',
+               },
+               {% endfor %}
+            ],
+            {
+               xaxis: {
+                  min: 0,
+                  max: 6,
+                  ticks: [[1,'Day Scholar'],[3,'Hostellite']],
+               },
+               yaxis: {
+                  min:0,
+               },
+               grid: {
+                  backgroundColor: { colors: ["#fff", "#eef"] }
+               }
+            }
+         );
+         $.plot(
+            $("#graph_admission"),
+            [
+               {% for gd in graphs.admission %}
+               {
+                  'label': '{{gd.y}} : {{gd.label}}',
+                  'data':[[{{gd.x}},{{gd.y}}],],
+                  'bars':{show:true, align:"center"},
+                  'color': '{{gd.color}}',
+               },
+               {% endfor %}
+            ],
+            {
+               xaxis: {
+                  min: 0,
+                  max: 6,
+                  ticks: [[1,'Counselling Students'],[3,'Management Students']],
+               },
+               yaxis: {
+                  min:0,
+               },
+               grid: {
+                  backgroundColor: { colors: ["#fff", "#fee"] }
+               }
+            }
+         );
+         $.plot(
+            $("#graph_failuredistribution"),
+            [
+               {% for od in graphs.failuredistribution %}
+               {% autoescape off %}
+                  {{ od }},
+               {% endautoescape %}
+               {% endfor %}
+            ]
+            ,
+            {
+               series: {
+                  pie: {
+                     show: true
+                  }
+               }
+            }
+         );
+         {% endif %}
+      });
+   </script>
+   <style type="text/css">
+   body {
+      margin-left: 50px;
+   }
+   td {
+      text-align: center;
+   }
+   </style>
+{% endblock %}
+{% block content %}
+<h2 style="text-align:center;">Custom Report Form</h2>
+<form action="custom" method="GET">
+<ul class="tree">
+<li>
+   <input type="checkbox">
+   <label>All Departments</label>
+      <ul>
+   {% for dept_name,dept_abbr,courses in checktree_data.departments %}
+         <li>
+         <input type="checkbox">
+         <label>{{ dept_name }}</label>
+         <ul>
+         {% for course,batches in courses %}
+            <li>
+            <input type="checkbox">
+            <label>{{ course }}</label>
+            <ul>
+            {% for batch in batches %}
+               <li>
+               <input type="checkbox" name="b" value="{{ course }}|{{ dept_abbr }}|{{ batch.year_of_graduation }}|{{ batch.section }}">
+               <label>{{ batch }}</label>
+               </li>
+            {% endfor %}
+            </ul>
+            </li>
+         {% endfor %}
+         </ul>
+         </li>
+   {% endfor %}
+      </ul>
+</li>
+<li>
+   <input type="checkbox">
+   <label>All Semesters</label>
+   <ul>
+   {% for semester,data in checktree_data.semesters %}
+   <li>
+      <input type="checkbox">
+      <label>{{ semester }}</label>
+      <ul>
+         {% for no in data %}
+            <li>
+               <input type="checkbox" name="s" value="{{ no }}">
+               <label>Semester {{ no }}</label>
+            </li>
+         {% endfor %}
+      </ul>
+   </li>
+   {% endfor %}
+   </ul>
+</li>
+<li>
+<input type="checkbox">
+<label>All Academic Years</label>
+<ul>
+{% for year,text in checktree_data.academic_years %}
+   <li>
+   <input type="checkbox" name="y" value="{{ year }}">
+   <label>{{ text }}</label>
+   </li>
+{% endfor %}
+</ul>
+</li>
+</ul>
+<input type="submit" value="Submit">
+</form>
+{% if graphs %}
+<h3>Batches covered: {% for b in selection.batches %}{{b}}{% if not forloop.last %},{% endif %}{% endfor %}</h3>
+<h3>Semesters covered: {% for s in selection.semesters %}{{s}}{% if not forloop.last %},{% endif %}{% endfor %}</h3>
+<h3>Academic Years covered: {% for ay in selection.academic_years %}{{ay}}{% if not forloop.last %},{% endif %}{% endfor %}</h3>
+<h3>Pass Percentage Distribution</h3>
+<table border="1" cellpadding="10px" cellspacing="2px" >
+<tr>
+<th></th>
+<th>Number Appeared</th>
+<th>Number Passed</th>
+<th>Pass Percentage</th>
+</tr>
+{% for trow in pass_table %}
+<tr>
+{% for tdata in trow %}
+<td>{{ tdata }}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+<br/>
+<br/>
+<h3>Overall</h3>
+<div id="graph_overall" style="width:500px; height: 300px; text-align:center;"></div>
+<h3>Gender</h3>
+<div id="graph_gender" style="width:500px; height: 300px; text-align:center;"></div>
+<h3>Staying</h3>
+<div id="graph_staying" style="width:500px; height: 300px; text-align:center;"></div>
+<h3>Admission</h3>
+<div id="graph_admission" style="width:500px; height: 300px; text-align:center;"></div>
+<br/>
+<h3>Toppers</h3>
+<table border="1" cellpadding="10px" cellspacing="2px">
+<tr>
+<th>Rank</th>
+<th>Name of the Candidate</th>
+<th>Department</th>
+<th>Reg. No</th>
+<th>Total</th>
+<th>Percentage</th>
+</tr>
+{% for trow in toppers_table %}
+<tr>
+{% for tdata in trow %}
+<td>{{ tdata }}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+<br />
+<h3>Subjectwise Performance</h3>
+<table border="1" cellpadding="10px" cellspacing="2px">
+<tr>
+<th>Subject Code</th>
+<th>Name of the Subject</th>
+<th>Appeared</th>
+<th>Passed</th>
+<th>Percentage</th>
+<th>Batch</th>
+<th>Handling Staff</th>
+</tr>
+{% for trow in subjectwise_table %}
+<tr>
+{% for tdata in trow %}
+<td>{{ tdata }}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+<h3>Paperwise Failures</h3>
+<table border="1" cellpadding="10px" cellspacing="2px">
+<tr>
+<th>Paper Code</th>
+<th>Appeared</th>
+<th>Failed</th>
+<th>Percentage</th>
+</tr>
+{% for trow in paperwise_table %}
+<tr>
+{% for tdata in trow %}
+<td>{{ tdata }}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+<br/>
+<h3>Single Paper Failures</h3>
+<table border="1" cellpadding="10px" cellspacing="2px">
+<tr>
+<th>Paper</th>
+<th>Number of Failures</th>
+</tr>
+{% for paper_code,failures in ssf %}
+<tr>
+<td>{{paper_code}}</td>
+<td>{{failures}}</td>
+</tr>
+{% endfor %}
+</table>
+<br/>
+<h3>Failure Distribution</h3>
+<table border="1" cellpadding="10px" cellspacing="2px">
+<tr>
+<th>Number of Arrears</th>
+<th>Number of Students</th>
+</tr>
+{% for trow in fd %}
+<tr>
+{% for tdata in trow %}
+<td>{{ tdata }}</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+<div id="graph_failuredistribution" style="width:500px; height: 300px; text-align:center;"></div>
+{% endif %}
+{% endblock %}

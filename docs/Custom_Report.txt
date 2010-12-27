@@ -1,0 +1,60 @@
+Custom Report
+#############
+
+Depiction
+=========
+
+Custom Report
+|--(All)
+|--Choose Department(s) and Course(s)
+|  |--(All)
+|  |--CSE
+|  |  |--B.E.
+|  |  |  |--2007-2011 A
+|  |  |  |--2007-2011 B
+|  |  |  \--...
+|  |  \--M.E.
+|  |     \-...
+|  |--IT
+|  |  \--...
+|  \--...
+|--Choose Semester(s)
+|  |--(All)
+|  |--Odd Semester
+|  |  |--1st Semester
+|  |  |--3rd Semester
+|  |  |--5th Semester
+|  |  \--7th Semester
+|  \--Even Semester
+|     |--2nd Semester
+|     |--4th Semester
+|     |--6th Semester
+|     \--8th Semester
+\--Choose Year(s)
+   |--2007-2008
+   |--2008-2009
+   |--2009-2010
+   |--2010-2011
+   \--...
+
+Hierarchy
+=========
+
+Department:
+   Course:
+      Batch
+Even/Odd Semester:
+   Single Semester
+Academic Year:
+
+Use Cases
+==========
+
+1. Generate a report of 7th semester performance of B.E. CSE-2011 students
+   *1. Select Departments & Course->CSE->B.E
+   *2. Select Semesters->Odd Semester->7th Semester
+   *3. Choose Year->2010-2011
+2. Generate Overall report of Even semester results just released
+   *1. Select Departments & Course->(All)
+   *2. Select Semesters->Even Semester
+   *3. Select Year->2010-2011

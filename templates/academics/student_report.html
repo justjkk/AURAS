@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block head %}
+   <script language="javascript" type="text/javascript" src="/static/js/jquery.js"></script>
+   <script language="javascript" type="text/javascript" src="/static/js/jquery.flot.js"></script> 
+   <script type="text/javascript">
+      var semwise_data = {{ semwise_data }};
+      $(document).ready(function (){
+         $.plot(
+            $("#sem_performance"),
+            [
+               {
+                  'color':'yellow',
+                  'data':semwise_data,
+                  'lines':{show:true},
+                  'points':{show:true}
+               },
+            ],
+            {
+               xaxis: {
+                  tickDecimals: 0,
+               },
+               yaxis: {
+                  min:0,
+               },
+               grid: {
+                  backgroundColor: { colors: ["#676", "#dfd"] }
+               }
+            }
+         );
+      });
+   </script>
+{% endblock %}
+{% block content %}
+<h2>Student Report: {{ student.name }}</h2>
+<h3>Aggregate: {{ aggregate }} </h3>
+<div id="sem_performance" style="width:800px; height: 400px;"></div>
+{% endblock %}
