@@ -1,0 +1,101 @@
+body {
+   width: 940px;
+   padding: 10px;
+   margin: 0 auto;
+   min-height: 800px;
+   background-image: url(../background.jpg);
+   background-repeat: no-repeat;
+   background-position: top left;
+   background-attachment: fixed;
+   font-size: 10pt;
+}
+
+#content {
+   min-height: 400px;
+}
+
+div.error {
+   background-color: #fdd;
+   color: #700;
+   padding: 10px;
+   margin: 10px;
+   clear: both;
+}
+
+div.success {
+   background-color: #dfd;
+   color: #070;
+   padding: 10px;
+   margin: 10px;
+   clear: both;
+}
+
+div.info {
+   background-color: #ddf;
+   color: #007;
+   padding: 10px;
+   margin: 10px;
+   clear: both;
+}
+
+a:hover {
+   color: #070;
+}
+
+.menu li {
+   list-style: none;
+}
+.menu li a {
+   float: left;
+   border: 1px solid #777;
+   display: block;
+   min-width: 100px;
+   margin: 5px;
+   padding: 10px;
+   text-align: center;
+   border-radius: 25px 25px 5px 5px;
+   text-decoration: none;
+   font-size: 1.4em;
+}
+.menu li a:hover {
+   background-color: #ff7;
+}
+
+header {
+   font-size: 1.6em;
+   text-align: center;
+   font-family: Arial, sans-serif;
+   font-weight: bold;
+}
+hr {
+   clear: both;
+}
+
+aside {
+   border: 1px dotted;
+   background-color: rgba(255,255,255,0.3);
+}
+aside header {
+   padding: 10px 20px 0px 20px;
+   color: #400;
+   font-size: 1em;
+   text-align: left;
+}
+
+#recent_reports {
+   width: 300px;
+}
+
+footer {
+   margin-top: 30px;
+   padding: 10px 20px;
+   background-color: rgba(0,0,0,0.2);
+   color: #444;
+   text-align: center;
+}
+footer ul li{
+   display: inline;
+}
+footer ul li:not(:last-child):after {
+   content: " | ";
+}

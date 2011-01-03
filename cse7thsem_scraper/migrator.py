@@ -22,6 +22,8 @@ def update_marks(marks_dict):
             am.student = student
             am.paper = paper
             am.internal_mark = int(mark["internal"])
+            if mark["external"] == 'AB': #FIXME: Verify if being absent adds to arrear count
+               mark["external"] = 0
             am.external_mark = int(mark["external"]) # External mark, are you sure?
             am.save()
          except Exception, e:

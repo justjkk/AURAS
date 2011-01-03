@@ -1,8 +1,11 @@
 from django.shortcuts import render_to_response, get_object_or_404
+from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
 from models import *
 from calculations import calculate_total_and_percentage, calculate_arrears_from_am
 from datetime import datetime
 
+@login_required
 def custom_report(request):
    checktree_data = {}
    checktree_data["departments"] = []
@@ -23,7 +26,7 @@ def custom_report(request):
       semesters = [int(s) for s in request.GET.getlist("s")]
       years = [int(y) for y in request.GET.getlist("y")]
    else:
-      return render_to_response('academics/custom_report.html', {'checktree_data':checktree_data})
+      return render_to_response('academics/custom_report.html', {'checktree_data':checktree_data}, context_instance=RequestContext(request))
    batches = []
    for b_code in b_codes: #B.E.(R2004)|CSE|2011|A
       course,dept_abbr,year_of_graduation,section=b_code.split('|')
@@ -267,15 +270,16 @@ def custom_report(request):
    for key,value in sorted(single_paper_failure.iteritems(),key=lambda row: row[1], reverse=True):
       ssf += ((key, value),)
    graphs['failuredistribution'] = [{ 'label': str(i), 'data': failure_distribution[i] + 0.000001 } for i in xrange(0,7) ]
-   return render_to_response('academics/custom_report.html', {'selection': selection, 'graphs': graphs, 'pass_table': pass_table, 'toppers_table':toppers_table, 'subjectwise_table':subjectwise_table, 'paperwise_table':paperwise_table, 'fd':fd_table, 'ssf':ssf, 'checktree_data':checktree_data})
+   return render_to_response('academics/custom_report.html', {'selection': selection, 'graphs': graphs, 'pass_table': pass_table, 'toppers_table':toppers_table, 'subjectwise_table':subjectwise_table, 'paperwise_table':paperwise_table, 'fd':fd_table, 'ssf':ssf, 'checktree_data':checktree_data}, context_instance=RequestContext(request))
 
+@login_required
 def student_report(request):
    if "Roll_no" not in request.GET:
-      return render_to_response('academics/student_report_index.html')
-   student = get_object_or_404(Student, roll_no=request.GET["Roll_no"])
+      return render_to_response('academics/student_report_index.html', context_instance=RequestContext(request))
+   student = get_object_or_404(Student, roll_no__iexact=request.GET["Roll_no"])
    semwise_data = []
    for sem_no in range(1,student.batch.course.number_of_semesters + 1):
       ams = student.assessment_marks.filter(paper__during_sem=sem_no)
       semwise_data += [[sem_no,student.get_nth_sem_percentage(sem_no) or 0],]
    aggregate = student.get_aggregate()
-   return render_to_response('academics/student_report.html', {'student': student, 'semwise_data': semwise_data, 'aggregate': aggregate})
+   return render_to_response('academics/student_report.html', {'student': student, 'semwise_data': semwise_data, 'aggregate': aggregate}, context_instance=RequestContext(request))

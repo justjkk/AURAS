@@ -80,4 +80,5 @@ INSTALLED_APPS = (
     'django_extensions',
 
     'AURAS.academics',
+    'AURAS.janitor',
 )

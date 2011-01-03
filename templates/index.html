@@ -1,7 +1,11 @@
 {% extends "base.html" %}
+{% block title %}Home{% endblock %}
 {% block content %}
-   <h1 style="text-align:center;">Welcome to AURAS</h1>
-   <h2><a href="/admin">Admin Page</a></h2>
-   <h2><a href="{% url custom_report %}">View Custom Report</a></h2>
-   <h2><a href="{% url student_report %}">View Student Report</a></h2>
+<aside id="recent_reports">
+<header>Recent Reports</header>
+<ul>
+   <li><a href="#">Placeholder 1</a></li>
+   <li><a href="#">Placeholder 2</a></li>
+</ul>
+</aside>
 {% endblock %}
