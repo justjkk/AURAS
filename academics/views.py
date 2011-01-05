@@ -266,9 +266,9 @@ def custom_report(request):
 
 @login_required
 def student_report(request):
-   if "Roll_no" not in request.GET:
+   if "Reg_no" not in request.GET:
       return render_to_response('academics/student_report_index.html', context_instance=RequestContext(request))
-   student = get_object_or_404(Student, roll_no__iexact=request.GET["Roll_no"])
+   student = get_object_or_404(Student, reg_no=request.GET["Reg_no"])
    semwise_data = []
    for sem_no in range(1,student.batch.course.number_of_semesters + 1):
       ams = student.assessment_marks.filter(paper__during_sem=sem_no)
