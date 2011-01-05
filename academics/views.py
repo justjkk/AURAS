@@ -20,26 +20,18 @@ def custom_report(request):
    checktree_data["semesters"] = [("Odd Semester",[1,3,5,7]),("Even Semester",[2,4,6,8])]
    this_year = datetime.now().year
    checktree_data["academic_years"] = [(x,"%d-%d" % (x-1,x)) for x in range(this_year + 1, this_year - 4, -1)]
-   skip_report = False
    if "b" in request.GET and "s" in request.GET and "y" in request.GET:
-      b_codes = request.GET.getlist("b")
+      b_ids = request.GET.getlist("b")
       semesters = [int(s) for s in request.GET.getlist("s")]
       years = [int(y) for y in request.GET.getlist("y")]
    else:
       return render_to_response('academics/custom_report.html', {'checktree_data':checktree_data}, context_instance=RequestContext(request))
-   batches = []
-   for b_code in b_codes: #B.E.(R2004)|CSE|2011|A
-      course,dept_abbr,year_of_graduation,section=b_code.split('|')
-      degree,regulation = course.split('(')
-      regulation_year = int(regulation[1:-1])
-      batches.append(Batch.objects.filter(course=Course.objects.filter(department__abbr=dept_abbr).filter(degree=degree).get(regulation__year_formed=regulation_year)).filter(year_of_graduation=year_of_graduation).get(section=section))
-   #courses = Course.objects.filter(degree='B.E.', department__abbr='CSE') #TODO: Query and fill user-defined values
    am1 = AssessmentMark.objects.filter(paper__during_sem__in=semesters)
-   am2 = am1.filter(student__batch__in=batches)
+   am2 = am1.filter(student__batch__id__in=b_ids)
    filtered_am = am2.filter(academic_year__in=years)
    pass_table = ()
    academic_years = ["%d-%d" % (year - 1, year) for year in years]
-   selection = {'batches':batches,'semesters':semesters,'academic_years':academic_years}
+   selection = {'batches':Batch.objects.filter(id__in=b_ids),'semesters':semesters,'academic_years':academic_years}
    assessed_students = {}
    for marks in filtered_am.all():
       if marks.student not in assessed_students:

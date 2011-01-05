@@ -156,7 +156,7 @@
             <ul>
             {% for batch in batches %}
                <li>
-               <input type="checkbox" name="b" value="{{ course }}|{{ dept_abbr }}|{{ batch.year_of_graduation }}|{{ batch.section }}">
+               <input type="checkbox" name="b" value="{{ batch.id }}">
                <label>{{ batch }}</label>
                </li>
             {% endfor %}
