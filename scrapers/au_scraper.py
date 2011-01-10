@@ -1,14 +1,19 @@
 from __init__ import *
 
 class AUScraper(Scraper):
+   host = "result.annauniv.edu"
+
    def get_html(self, reg_no):
       user_agent = 'Mozilla/5 (Ubuntu 10.04) Gecko'
       headers = { 'User-Agent' : user_agent }
       params = urllib.urlencode({'regno': reg_no})
-      url = "http://result.annauniv.edu/cgi-bin/result/re10.pl?%s" % params
-      request = urllib2.Request( url, None, headers)
-      response = urllib2.urlopen(request)
-      return response.read()
+      self.conn.request("GET", "/cgi-bin/result/re10.pl?%s" % params, None, headers) # Mark System
+      #self.conn.request("GET", "/cgi-bin/result/result10gr.pl?%s" % params) # Grade System
+      resp = self.conn.getresponse()
+      if resp.status == 200:
+         return resp.read()
+      else:
+         raise urllib2.HTTPError(resp.status, resp.reason)
 
    def parse_html(self, html):
       soup = BeautifulSoup(html)
