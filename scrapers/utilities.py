@@ -13,3 +13,11 @@ def parse_reg_nos(reg_str): # Format: 31107104001..117,301..314,404
          buff = buff[:-len(reg_range)] + reg_range
          reg_index += [int(buff)]
    return reg_index
+
+def join_parts(dir_name):
+   import os,re
+   whole = {}
+   for f in os.listdir(dir_name):
+      if re.search(".*\.json", f):
+         whole.update(json.load(open(f,"r")))
+   return whole

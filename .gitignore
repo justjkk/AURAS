@@ -1,5 +1,7 @@
 *.pyc
 *.pyo
 *.json
+*.hidden
+*.deleted
 privatesettings.py
 dumps/*

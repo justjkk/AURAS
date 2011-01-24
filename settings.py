@@ -73,12 +73,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
-    'AURAS.reporting',
+    #'AURAS.reporting',
     'django.contrib.admin',
 
     'south',
     'django_extensions',
 
     'AURAS.academics',
-    'AURAS.janitor',
+    #'AURAS.janitor',
 )

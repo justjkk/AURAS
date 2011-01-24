@@ -13,11 +13,13 @@ class AUScraper(Scraper):
       if resp.status == 200:
          return resp.read()
       else:
-         raise urllib2.HTTPError(resp.status, resp.reason)
+         raise Exception("%d:%s" % (resp.status, resp.reason))
 
    def parse_html(self, html):
       soup = BeautifulSoup(html)
       trs = soup.find('table').findAll('tr')[2:]
+      if len(trs) == 0:
+         raise Exception("Register number does not probably exist")
       mark_details = {}
       for tr in trs:
          text = []

@@ -1,6 +1,7 @@
 from pyExcelerator import *
 import os
 import sys
+import simplejson as json
 
 def setup_environment():
     pathname = os.path.dirname(sys.argv[0])
@@ -17,11 +18,11 @@ def get_batch(batchstr): # batchstr format: B.E. CSE A 2011
 def student_details_from_xls(xls):
    student_details = {}
    record = {}
-   prev_row_idx = 0
    prev_sheet_name = None
    for sheet_name, values in parse_xls(xls):
       if sheet_name not in student_details:
          student_details[sheet_name] = []
+      prev_row_idx = 0
       for row_idx, col_idx in sorted(values.keys()):
          if row_idx == 0: continue
          if prev_row_idx != row_idx and prev_row_idx != 0:
@@ -29,7 +30,8 @@ def student_details_from_xls(xls):
             record = {}
          record[values[(0,col_idx)]] = values[(row_idx, col_idx)]
          prev_row_idx = row_idx
-      if prev_row_idx != 0: student_details[sheet_name].append(record)
+   if prev_row_idx != 0: student_details[sheet_name].append(record)
+   json.dump(student_details, open('debug.json','w'), indent=4, sort_keys=True)
    return student_details
 
 """
@@ -37,7 +39,7 @@ def student_details_from_xls(xls):
 """
 def update_student_details(student_details):
    from academics.models import Student
-   for batch_name in student_details:
+   for batch_name in student_details.keys():
       batch = get_batch(batch_name)
       for record in student_details[batch_name]:
          try:

@@ -11,7 +11,7 @@ if __name__ == "__main__":
    f = open(sys.argv[1],'r')
    reg_str = f.read()
    reg_index = parse_reg_nos(reg_str)
-   scraper = AUScraper()
+   scraper = ChennaiEducationScraper()
    all_students_mark_details = scraper.do_scrape(reg_index)
    # Output the Dictionary to json file
    f = open('output.json','w')
